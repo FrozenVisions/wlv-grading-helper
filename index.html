@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Free vinyl grading helper — WholeLottaVinyl grades (M, NM, EX, VG+, VG, G+) from a short checklist." />
+  <title>WholeLottaVinyl Record Grading Helper</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <div class="hero-badge" id="brand-badge">WholeLottaVinyl</div>
+      <h1 id="tool-title">Record Grading Helper</h1>
+      <p class="tagline" id="brand-tagline">A free guide for vinyl &amp; cover condition — WholeLottaVinyl grading (M · NM · EX · VG+ · VG · G+).</p>
+      <p class="disclaimer">This is a guide, not a guarantee. When unsure, we grade down. Vinyl and cover are graded separately.</p>
+    </header>
+
+    <main class="layout">
+      <section class="card checklist-card" aria-labelledby="checklist-heading">
+        <h2 id="checklist-heading">Grade this copy</h2>
+        <p class="card-lead">Tick what you see and hear. Worst criterion wins. Grades: M, NM, EX, VG+, VG, G+.</p>
+
+        <form id="grade-form" novalidate>
+          <fieldset class="block">
+            <legend>Vinyl</legend>
+            <label class="check">
+              <input type="checkbox" name="sealed" id="sealed" />
+              <span>Still sealed / unopened</span>
+            </label>
+            <label class="check">
+              <input type="checkbox" name="played" id="played" />
+              <span>Has been played</span>
+            </label>
+            <label class="row">
+              <span>Scratches</span>
+              <select name="scratches" id="scratches">
+                <option value="none">None</option>
+                <option value="handful">A handful of hairlines (not feelable)</option>
+                <option value="numerous">Numerous hairlines / easily noticeable (not feelable)</option>
+                <option value="feelable">Feelable scratches</option>
+              </select>
+            </label>
+            <label class="check">
+              <input type="checkbox" name="skipsPopsJumps" id="skipsPopsJumps" />
+              <span>Skips, pops or jumps</span>
+            </label>
+            <label class="check warn">
+              <input type="checkbox" name="unplayable" id="unplayable" />
+              <span>Unplayable / worse than G+</span>
+            </label>
+          </fieldset>
+
+          <fieldset class="block">
+            <legend>Cover</legend>
+            <label class="row">
+              <span>Cover condition</span>
+              <select name="coverCondition" id="coverCondition">
+                <option value="sealed">Sealed and unopened</option>
+                <option value="no_damage" selected>Opened — no rips, tears or damage</option>
+                <option value="small_wear">Small wear, no rips or tears</option>
+                <option value="light_rips">Small wear and light rips</option>
+                <option value="splits_rips_tears">Heavier wear — splits, rips or tears</option>
+                <option value="lots">Lots of splits, rips and tears</option>
+              </select>
+            </label>
+            <label class="row">
+              <span>Spine</span>
+              <select name="spine" id="spine">
+                <option value="full">Fully visible — text clearly readable</option>
+                <option value="part">Partly visible — part of the text</option>
+                <option value="none">Not visible</option>
+              </select>
+            </label>
+            <label class="check warn">
+              <input type="checkbox" name="coverDestroyed" id="coverDestroyed" />
+              <span>Heavily damaged / worse than G+</span>
+            </label>
+          </fieldset>
+
+          <div class="actions">
+            <button type="button" class="btn secondary" id="reset-btn">Reset</button>
+            <button type="submit" class="btn primary" id="grade-btn">Suggest grades</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="card result-card" aria-labelledby="result-heading" id="result-panel">
+        <h2 id="result-heading">Suggested grades</h2>
+        <p class="empty-hint" id="empty-hint">Fill in the checklist and tap <strong>Suggest grades</strong>. Results appear here with a paste-ready listing line.</p>
+
+        <div id="result-body" class="result-body hidden" hidden>
+          <div class="grade-grid">
+            <div class="grade-tile vinyl-tile">
+              <h3>Vinyl</h3>
+              <div class="chips">
+                <span class="chip goldmine" id="vinyl-grade-chip">—</span>
+              </div>
+              <p class="desc" id="vinyl-desc"></p>
+            </div>
+            <div class="grade-tile sleeve-tile">
+              <h3>Cover</h3>
+              <div class="chips">
+                <span class="chip goldmine" id="cover-grade-chip">—</span>
+              </div>
+              <p class="desc" id="cover-desc"></p>
+            </div>
+          </div>
+
+          <p class="below-note hidden" id="below-note" hidden>
+            Below G+ — not suitable to list on WholeLottaVinyl. Shown as G+ with a note.
+          </p>
+
+          <div class="reason-box">
+            <h3>Why</h3>
+            <p id="reason-text"></p>
+          </div>
+
+          <div class="comment-box">
+            <div class="comment-head">
+              <h3>Listing line</h3>
+              <button type="button" class="btn copy" id="copy-btn">Copy</button>
+            </div>
+            <textarea id="comment-text" readonly rows="7" aria-label="Paste-ready listing comment"></textarea>
+            <p class="copy-status" id="copy-status" role="status" aria-live="polite"></p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <section class="card info-card" aria-labelledby="how-heading">
+      <h2 id="how-heading">How we grade</h2>
+      <p>
+        Credit: <strong>WholeLottaVinyl grading</strong>. Six grades only —
+        <strong>M</strong>, <strong>NM</strong>, <strong>EX</strong>, <strong>VG+</strong>, <strong>VG</strong>, <strong>G+</strong>.
+        Vinyl and cover are graded separately; the worst criterion wins. When unsure, we grade down.
+        Anything worse than G+ is shown as G+ with a note that it is not suitable to list.
+      </p>
+      <dl class="grade-defs">
+        <dt>Mint (M)</dt>
+        <dd>Vinyl is unplayed &amp; cover is sealed and unopened.</dd>
+        <dt>Near Mint (NM)</dt>
+        <dd>Vinyl is unplayed — the grooves haven't developed in the tracks yet. Cover has been opened but has no rips, tears or damage at all.</dd>
+        <dt>Excellent (EX)</dt>
+        <dd>Vinyl has been played but has zero scratches throughout. Cover has small wear but no rips or tears.</dd>
+        <dt>Very Good Plus (VG+)</dt>
+        <dd>Vinyl has been played but has up to a handful of hairline scratches, none feelable. Cover has small wear and light rips, but the spine is fully visible — text clearly readable.</dd>
+        <dt>Very Good (VG)</dt>
+        <dd>Vinyl has been played, with numerous hairline and easily noticeable scratches, none feelable. Cover has heavier wear and can have splits, rips and tears. Spine is partly visible.</dd>
+        <dt>Good Plus (G+)</dt>
+        <dd>Feelable scratches that can cause skips, pops and jumps. Cover has lots of splits, rips and tears, and a non-visible spine.</dd>
+      </dl>
+    </section>
+
+    <footer class="site-footer">
+      <p id="footer-line">
+        <a id="footer-link" href="https://wholelottavinyl.com">Records graded this way at wholelottavinyl.com</a>
+      </p>
+      <p class="footer-meta">Free tool · No account · Guide only</p>
+    </footer>
+  </div>
+
+  <script src="brand.js"></script>
+  <script src="grading.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
